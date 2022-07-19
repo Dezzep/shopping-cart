@@ -8,7 +8,7 @@ const ShopCards = (props) => {
         
         <div className="card-actions justify-end">
           <p>{props.price}$</p>
-          <button className="btn btn-primary">Add To Cart</button>
+          <button onClick={props.addToCart} className="btn btn-primary ease-in duration-250">Add To Cart</button>
         </div>
       </div>
 
