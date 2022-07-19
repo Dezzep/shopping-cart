@@ -9,6 +9,10 @@ const Shop = () => {
   const [cartItems, setCartItems] = useState(
     JSON.parse(localStorage.getItem('cartItems')) || 0
   );
+  // id's are just intergers. These will be used to fetch an api when the cart is clicked.
+  const [cartIds, setCartIds] = useState( 
+    JSON.parse(localStorage.getItem('cartIds'))||{}
+  )
   
 
   const fetchFakeStoreApi = async () => {
@@ -19,15 +23,15 @@ const Shop = () => {
       setStoreData(data);
     }
   }
-  const addItem = async () => {
-    setCartItems(cartItems + 1)
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-
+  const createArrayOfIdsForShoppingCart = (id) => {
+    cartIds[id] = cartIds[id] + 1 || 1;
+    setCartIds(cartIds)
+    localStorage.setItem('cartIds', JSON.stringify(cartIds))
   };
-  const removeItem = () => {
-    if (cartItems !== 0) {
-      setCartItems(cartItems - 1)
-    }
+  const addItem = async (id) => {
+    setCartItems(cartItems + 1)
+    createArrayOfIdsForShoppingCart(id)
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
   };
   
   useEffect(() => {
@@ -38,6 +42,12 @@ const Shop = () => {
   
   }, [cartItems])
   
+  useEffect(() => {
+    localStorage.setItem('cartIds', JSON.stringify(cartIds));
+  
+  }, [cartIds])
+  
+  
   
 const arrayOfCards = [];  
 for (const i in storeData) {
@@ -45,6 +55,7 @@ for (const i in storeData) {
     title={storeData[i].title} 
     key={storeData[i].title} 
     image={storeData[i].image} 
+    idKey={storeData[i].id}
     price={storeData[i].price.toFixed(2)} // To fixed makes sure all prices look like ex: 12.3 = 12.30
     addToCart={addItem}
   />)
