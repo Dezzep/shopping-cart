@@ -21,7 +21,6 @@ const Shop = () => {
   }
   const addItem = async () => {
     setCartItems(cartItems + 1)
-    console.log(cartItems);
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
 
   };
@@ -52,7 +51,7 @@ for (const i in storeData) {
 }
 
   return (
-    <div className="bg-base-100">
+    <div className="bg-base-100 mt-36">
       <Navbar cartDisplay={cartItems}/>
       {/* <ShopCards title={storeData.title} image={storeData.image} description={storeData.description} /> */}
       <h1 className="text-2xl text-center mb-12">Shop</h1>
