@@ -6,9 +6,10 @@ const Shop = () => {
   
 
   const [storeData, setStoreData] = useState('');
-  const [cartItems, setCartItems] = useState(
-    JSON.parse(localStorage.getItem('cartItems')) || 0
+  const [totalCartItems, setTotalCartItems] = useState(
+    JSON.parse(localStorage.getItem('totalCartItems')) || 0
   );
+  
   // id's are just intergers. These will be used to fetch an api when the cart is clicked.
   const [cartIds, setCartIds] = useState( 
     JSON.parse(localStorage.getItem('cartIds'))||{}
@@ -19,7 +20,6 @@ const Shop = () => {
     if (!storeData) {
       const request = await fetch("https://fakestoreapi.com/products/")
       const data = await request.json();
-      // setStoreData(data)
       setStoreData(data);
     }
   }
@@ -29,18 +29,18 @@ const Shop = () => {
     localStorage.setItem('cartIds', JSON.stringify(cartIds))
   };
   const addItem = async (id) => {
-    setCartItems(cartItems + 1)
+    setTotalCartItems(totalCartItems + 1)
     createArrayOfIdsForShoppingCart(id)
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    localStorage.setItem('totalCartItems', JSON.stringify(totalCartItems));
   };
   
   useEffect(() => {
     fetchFakeStoreApi();
   })
   useEffect(() => {
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    localStorage.setItem('totalCartItems', JSON.stringify(totalCartItems));
   
-  }, [cartItems])
+  }, [totalCartItems])
   
   useEffect(() => {
     localStorage.setItem('cartIds', JSON.stringify(cartIds));
@@ -63,7 +63,7 @@ for (const i in storeData) {
 
   return (
     <div className="bg-base-100 mt-36">
-      <Navbar cartDisplay={cartItems}/>
+      <Navbar cartDisplay={totalCartItems}/>
       {/* <ShopCards title={storeData.title} image={storeData.image} description={storeData.description} /> */}
       <h1 className="text-2xl text-center mb-12">Shop</h1>
     <div className="flex flex-wrap gap-6 sm:ml-12 sm:mr-12 md:ml-12 md:mr-12">

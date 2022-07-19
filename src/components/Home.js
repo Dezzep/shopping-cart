@@ -3,7 +3,7 @@ import { useState } from "react";
 
 const Home = () => {
   const [cartItems] = useState(
-    JSON.parse(localStorage.getItem('cartItems')) || 0
+    JSON.parse(localStorage.getItem('totalCartItems')) || 0
   );
   return (
     <div>
