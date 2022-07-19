@@ -36,7 +36,7 @@ for (const i in storeData) {
       <Navbar />
       {/* <ShopCards title={storeData.title} image={storeData.image} description={storeData.description} /> */}
       <h1 className="text-2xl text-center mb-12">Shop</h1>
-    <div className="flex flex-wrap gap-6 ml-2 mr-2 sm:ml-12 sm:mr-12 md:ml-6 md:mr-6">
+    <div className="flex flex-wrap gap-6 sm:ml-12 sm:mr-12 md:ml-12 md:mr-12">
       {arrayOfCards}
       
       
