@@ -7,7 +7,7 @@ const CartCards = (props) => {
         <p>Price: {props.price}$</p>
         <p>Qty: {props.qty}</p>
         <div className="card-actions justify-end">
-        <button className="btn bg-secondary">+</button>
+        <button onClick={e => {props.addItem(props.id)}} className="btn bg-secondary">+</button>
         <button className="btn bg-secondary">-</button>
         </div>
       </div>
