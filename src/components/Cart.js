@@ -18,7 +18,7 @@ const Cart = (props) => {
        * Alert if clicked on outside of element
        */
       function handleClickOutside(event) {
-        if (ref.current && !ref.current.contains(event.target)) {
+        if (ref.current && !ref.current.contains(event.target) && 'shop-cart-icon' !== event.target.id) {
           props.toggleCartDisplayOff()
         }
       }

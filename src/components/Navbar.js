@@ -28,7 +28,7 @@ const Navbar = (props) => {
           <li id='shop' className='text-2xl ease-in duration-300 hover:text-primary-focus'> Shop </li>
           </Link>
           <li className='mb-4 justify-center align-top tooltip tooltip-open tooltip-left tooltip-error ease-in duration-300 hover:tooltip-success cursor-pointer' id='shopping-bag' data-tip={props.cartDisplay}>
-             <svg onClick={() => {toggleCart()}} className='fill-primary-content hover:fill-primary-focus ease-in duration-300' xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path d="M20 7h-4v-3c0-2.209-1.791-4-4-4s-4 1.791-4 4v3h-4l-2 17h20l-2-17zm-11-3c0-1.654 1.346-3 3-3s3 1.346 3 3v3h-6v-3zm-4.751 18l1.529-13h2.222v1.5c0 .276.224.5.5.5s.5-.224.5-.5v-1.5h6v1.5c0 .276.224.5.5.5s.5-.224.5-.5v-1.5h2.222l1.529 13h-15.502z"/></svg>
+             <svg id="shop-cart-icon" onClick={() => {toggleCart()}} className='fill-primary-content hover:fill-primary-focus ease-in duration-300' xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path d="M20 7h-4v-3c0-2.209-1.791-4-4-4s-4 1.791-4 4v3h-4l-2 17h20l-2-17zm-11-3c0-1.654 1.346-3 3-3s3 1.346 3 3v3h-6v-3zm-4.751 18l1.529-13h2.222v1.5c0 .276.224.5.5.5s.5-.224.5-.5v-1.5h6v1.5c0 .276.224.5.5.5s.5-.224.5-.5v-1.5h2.222l1.529 13h-15.502z"/></svg>
           </li>
         </ul>
         <Cart toggleCartDisplayOff={toggleCartDisplayOff} display={displayCart} deleteItem={props.deleteItem} addItem={props.addItem} rendering={props.cartDisplay} data={props.data} cartIds={props.cartIds}></Cart>
@@ -47,10 +47,10 @@ const Navbar = (props) => {
           <li data-testid='shoptag' id='shop' className='text-2xl justify-center align-center ease-in duration-300 hover:text-primary-focus'> Shop </li>
           </Link>
           <li className='' id='shopping-bag' data-tip={props.cartDisplay}>
-             <svg onClick={() => {toggleCart()}} className='fill-primary-content align-center justify-center hover:fill-primary-focus ease-in duration-300' xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path d="M20 7h-4v-3c0-2.209-1.791-4-4-4s-4 1.791-4 4v3h-4l-2 17h20l-2-17zm-11-3c0-1.654 1.346-3 3-3s3 1.346 3 3v3h-6v-3zm-4.751 18l1.529-13h2.222v1.5c0 .276.224.5.5.5s.5-.224.5-.5v-1.5h6v1.5c0 .276.224.5.5.5s.5-.224.5-.5v-1.5h2.222l1.529 13h-15.502z"/></svg>
+             <svg id="shop-cart-icon" onClick={() => {toggleCart()}} className='fill-primary-content align-center justify-center hover:fill-primary-focus ease-in duration-300' xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path d="M20 7h-4v-3c0-2.209-1.791-4-4-4s-4 1.791-4 4v3h-4l-2 17h20l-2-17zm-11-3c0-1.654 1.346-3 3-3s3 1.346 3 3v3h-6v-3zm-4.751 18l1.529-13h2.222v1.5c0 .276.224.5.5.5s.5-.224.5-.5v-1.5h6v1.5c0 .276.224.5.5.5s.5-.224.5-.5v-1.5h2.222l1.529 13h-15.502z"/></svg>
           </li>
         </ul>
-        <Cart display={displayCart} cartIds={props.cartIds}></Cart>
+        <Cart toggleCartDisplayOff={toggleCartDisplayOff} display={displayCart} cartIds={props.cartIds}></Cart>
 
       </nav>
         }
