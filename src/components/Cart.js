@@ -3,40 +3,19 @@ import CartCards from "./CartCards";
 
 const Cart = (props) => {
   const [rerender, setRerender] = useState(props.rendering);
-  const [apiCall, setApiCall] = useState(false);
-  const [apiData, setApiData] = useState([]);
-
-  const fetchFakeStoreApi = async () => {
-    if (!apiCall){
-      const request = await fetch(`https://fakestoreapi.com/products/`)
-      const data = await request.json();
-      setApiCall(true);
-      setApiData(data);
-    } 
-    
-    }
   useEffect(() => {
     if (props.rendering !== rerender) {
       setRerender(props.rendering)
       }
+
 }, [props.rendering, rerender])
 
-  useEffect(() => {
-    fetchFakeStoreApi();
-  });
-  
-
 const shopArray = () => {
+  if (props.data && props.cartIds) {
   const array =[];
-  if (apiCall) {
-    const cartIdsString = localStorage.getItem('cartIds');
-    const cartIds = JSON.parse(cartIdsString);
-    for (const key in cartIds) {
-      array.push(<CartCards key={`${apiData[key].title}__${apiData[key].id}`} title={apiData[key].title} image={apiData[key].image} price={apiData[key].price.toFixed(2)} qty={cartIds[key]}>
-        
+    for (const key in props.cartIds) {
+      array.push(<CartCards key={`${props.data[key].title}__${props.data[key].id}`} title={props.data[key].title} image={props.data[key].image} price={props.data[key].price.toFixed(2)} qty={props.cartIds[key]}>        
         </CartCards>)
-      
-     // console.log(Object.values(cartIds))
     }
     return (array);
   }

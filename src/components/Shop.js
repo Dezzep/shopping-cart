@@ -1,75 +1,44 @@
 import Navbar from "./Navbar";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import ShopCards from "./ShopCards";
 
-const Shop = () => {
-  
-
-  const [storeData, setStoreData] = useState('');
-  const [totalCartItems, setTotalCartItems] = useState(
-    JSON.parse(localStorage.getItem('totalCartItems')) || 0
-  );
-  
-  // id's are just intergers. These will be used to fetch an api when the cart is clicked.
-  const [cartIds, setCartIds] = useState( 
-    JSON.parse(localStorage.getItem('cartIds'))||{}
-  )
-  
-
-  const fetchFakeStoreApi = async () => {
-    if (!storeData) {
-      const request = await fetch("https://fakestoreapi.com/products/")
-      const data = await request.json();
-      setStoreData(data);
-    }
-  }
-  const createArrayOfIdsForShoppingCart = (id) => {
-    cartIds[id] = cartIds[id] + 1 || 1;
-    setCartIds(cartIds)
-    localStorage.setItem('cartIds', JSON.stringify(cartIds))
-  };
-  const addItem = async (id) => {
-    setTotalCartItems(totalCartItems + 1)
-    createArrayOfIdsForShoppingCart(id)
-    localStorage.setItem('totalCartItems', JSON.stringify(totalCartItems));
-  };
-  
+const Shop = (props) => {
+    
   useEffect(() => {
-    fetchFakeStoreApi();
+    props.fakeStoreData();
   })
   useEffect(() => {
-    localStorage.setItem('totalCartItems', JSON.stringify(totalCartItems));
+    localStorage.setItem('totalCartItems', JSON.stringify(props.totalCartItems));
   
-  }, [totalCartItems])
+  }, [props.totalCartItems])
   
   useEffect(() => {
-    localStorage.setItem('cartIds', JSON.stringify(cartIds));
+    localStorage.setItem('cartIds', JSON.stringify(props.cartIds));
   
-  }, [cartIds])
+  }, [props.cartIds])
   
   
   
 const arrayOfCards = [];  
-for (const i in storeData) {
+for (const i in props.storeData) {
+  if (props.storeData[i].category === "men's clothing" || props.storeData[i].category === "women's clothing") {
   arrayOfCards.push(<ShopCards 
-    title={storeData[i].title} 
-    key={storeData[i].title} 
-    image={storeData[i].image} 
-    idKey={storeData[i].id}
-    price={storeData[i].price.toFixed(2)} // To fixed makes sure all prices look like ex: 12.3 = 12.30
-    addToCart={addItem}
+    title={props.storeData[i].title} 
+    key={props.storeData[i].title} 
+    image={props.storeData[i].image} 
+    idKey={props.storeData[i].id}
+    price={props.storeData[i].price.toFixed(2)} // To fixed makes sure all prices look like ex: 12.3 = 12.30
+    addToCart={props.addItem}
   />)
+  }
 }
 
   return (
     <div className="bg-base-100 mt-36">
-      <Navbar cartDisplay={totalCartItems}/>
-      {/* <ShopCards title={storeData.title} image={storeData.image} description={storeData.description} /> */}
+      <Navbar cartDisplay={props.totalCartItems} cartIds={props.cartIds} data={props.storeData} />
       <h1 className="text-2xl text-center mb-12">Shop</h1>
     <div className="flex flex-wrap gap-6 sm:ml-12 sm:mr-12 md:ml-12 md:mr-12">
       {arrayOfCards}
-      
-      
     </div>
     </div>
   )

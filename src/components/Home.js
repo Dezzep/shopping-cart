@@ -1,16 +1,12 @@
 import Navbar from "./Navbar";
-import { useState } from "react";
 import { Link } from 'react-router-dom';
 
 
 
-const Home = () => {
-  const [cartItems] = useState(
-    JSON.parse(localStorage.getItem('totalCartItems')) || 0
-    );
+const Home = (props) => {
   return (
     <div>
-      <Navbar cartDisplay={cartItems} />
+      <Navbar cartDisplay={props.totalCartItems} cartIds={props.cartIds} data={props.storeData}/>
       <div className="hero min-h-screen" style={{backgroundImage: `url(${process.env.PUBLIC_URL + '/hero.jpg'})` }} >
         <div className="hero-overlay bg-opacity-50"></div>
         <div className="hero-content text-center text-neutral-content">
