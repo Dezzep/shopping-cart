@@ -10,7 +10,7 @@ const Home = (props) => {
   }, [props.totalCartItems])
   return (
     <div>
-      <Navbar cartDisplay={props.totalCartItems} cartIds={props.cartIds} data={props.storeData} addItem={props.addItem}/>
+      <Navbar deleteItem={props.deleteItem} cartDisplay={props.totalCartItems} cartIds={props.cartIds} data={props.storeData} addItem={props.addItem}/>
       <div className="hero min-h-screen" style={{backgroundImage: `url(${process.env.PUBLIC_URL + '/hero.jpg'})` }} >
         <div className="hero-overlay bg-opacity-50"></div>
         <div className="hero-content text-center text-neutral-content">

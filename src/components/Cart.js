@@ -14,7 +14,7 @@ const shopArray = () => {
   if (props.data && props.cartIds) {
   const array =[];
     for (const key in props.cartIds) {
-      array.push(<CartCards addItem={props.addItem}  key={`${props.data[key].title}__${props.data[key].id}`} title={props.data[key].title} image={props.data[key].image} price={props.data[key].price.toFixed(2)} qty={props.cartIds[key]} id={props.data[key].id - 1}>        
+      array.push(<CartCards deleteItem={props.deleteItem} addItem={props.addItem}  key={`${props.data[key].title}__${props.data[key].id}`} title={props.data[key].title} image={props.data[key].image} price={props.data[key].price.toFixed(2)} qty={props.cartIds[key]} id={props.data[key].id - 1}>        
         </CartCards>)
     }
     return (array);

@@ -8,7 +8,7 @@ const CartCards = (props) => {
         <p>Qty: {props.qty}</p>
         <div className="card-actions justify-end">
         <button onClick={e => {props.addItem(props.id)}} className="btn bg-secondary">+</button>
-        <button className="btn bg-secondary">-</button>
+        <button className="btn bg-secondary" onClick={e => {props.deleteItem(props.id)}}>-</button>
         </div>
       </div>
     </div>

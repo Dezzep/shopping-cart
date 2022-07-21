@@ -35,7 +35,7 @@ for (const i in props.storeData) {
 
   return (
     <div className="bg-base-100 mt-36">
-      <Navbar cartDisplay={props.totalCartItems} addItem={props.addItem} cartIds={props.cartIds} data={props.storeData} />
+      <Navbar deleteItem={props.deleteItem} cartDisplay={props.totalCartItems} addItem={props.addItem} cartIds={props.cartIds} data={props.storeData} />
       <h1 className="text-2xl text-center mb-12">Shop</h1>
     <div className="flex flex-wrap gap-6 sm:ml-12 sm:mr-12 md:ml-12 md:mr-12">
       {arrayOfCards}

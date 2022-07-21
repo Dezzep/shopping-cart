@@ -28,17 +28,31 @@ const RouteSwitch = () => {
     localStorage.setItem('cartIds', JSON.stringify(cartIds))
   };
 
-  const addItem = async (id) => {
+  const removeFromArrayOfIdsForShoppingCart = (id) => {
+    cartIds[id] = cartIds[id] - 1;
+      if(cartIds[id] === 0) {
+        delete cartIds[id]
+      }
+    setCartIds(cartIds)
+    localStorage.setItem('cartIds', JSON.stringify(cartIds))
+  }
+
+  const addItem = (id) => {
     setTotalCartItems(totalCartItems + 1)
     createArrayOfIdsForShoppingCart(id)
     localStorage.setItem('totalCartItems', JSON.stringify(totalCartItems));
   };
+  const deleteItem = (id) => {
+    setTotalCartItems(totalCartItems - 1);
+    removeFromArrayOfIdsForShoppingCart(id);
+    localStorage.setItem('totalCartItems', JSON.stringify(totalCartItems));
+  }
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home addItem={addItem} totalCartItems={totalCartItems} cartIds={cartIds} fakeStoreData={fetchFakeStoreApi} storeData={storeData}> <Navbar></Navbar></Home>} />
-        <Route path="/shop" element={<Shop addItem={addItem} cartIds={cartIds} totalCartItems={totalCartItems} fakeStoreData={fetchFakeStoreApi} storeData={storeData}><Navbar> </Navbar> </Shop>} />
+        <Route path="/" element={<Home deleteItem={deleteItem} addItem={addItem} totalCartItems={totalCartItems} cartIds={cartIds} fakeStoreData={fetchFakeStoreApi} storeData={storeData}> <Navbar></Navbar></Home>} />
+        <Route path="/shop" element={<Shop deleteItem={deleteItem} addItem={addItem} cartIds={cartIds} totalCartItems={totalCartItems} fakeStoreData={fetchFakeStoreApi} storeData={storeData}><Navbar> </Navbar> </Shop>} />
       </Routes>
     </BrowserRouter>
   )
