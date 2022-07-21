@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import CartCards from "./CartCards";
 
 const Cart = (props) => {
@@ -7,8 +7,34 @@ const Cart = (props) => {
     if (props.rendering !== rerender) {
       setRerender(props.rendering)
       }
-
 }, [props.rendering, rerender])
+
+  const cartRef = useRef(null)
+
+   // copied this part from https://stackoverflow.com/questions/32553158/detect-click-outside-react-component
+  function useOutsideAlerter(ref) { 
+    useEffect(() => {
+      /**
+       * Alert if clicked on outside of element
+       */
+      function handleClickOutside(event) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          props.toggleCartDisplayOff()
+        }
+      }
+      // Bind the event listener
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  }
+
+  useOutsideAlerter(cartRef)
+// ---------------------------------------- END OF COPY
+
+
 
 const shopArray = () => {
   if (props.data && props.cartIds) {
@@ -23,7 +49,7 @@ const shopArray = () => {
   const theShop = shopArray();
 
   return (
-    <div>
+    <div id="shopping_cart" ref={cartRef}>
       <div className="absolute right-0 top-28 sm:top-20 p-1  h-full">
           <ul className={`menu h-screen p-2 overflow-y-auto w-80 bg-base-300 border-black border-2 text-base-content ease-in-out duration-500 ${props.display? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="sticky top-0 right-0 flex justify-around mb-4 bg-neutral/50 py-4 z-50">
