@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 
 const RouteSwitch = () => {
 
+  const [errorMsg, setErrorMsg] = useState('')
   const [blurEffect, setBlurEffect] = useState(false)
   const [storeData, setStoreData] = useState('')
   const [totalCartItems, setTotalCartItems] = useState( // TOTAL QUANTITY OF ITEMS IN CART
@@ -17,9 +18,13 @@ const RouteSwitch = () => {
 
   const fetchFakeStoreApi = async () => {
     if (!storeData) {
+     try{ 
       const request = await fetch("https://fakestoreapi.com/products/")
       const data = await request.json();
       setStoreData(data);
+     } catch(err) {
+      setErrorMsg('Failed To Connect To The Store Server.')
+     }
     }
   }
 
@@ -71,7 +76,7 @@ const RouteSwitch = () => {
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Routes>
         <Route path="/" element={<Home shopBlur={shopBlur} blurToggleOff={blurToggleOff} blurToggleOn={blurToggleOn} deleteItem={deleteItem} addItem={addItem} totalCartItems={totalCartItems} cartIds={cartIds} fakeStoreData={fetchFakeStoreApi} storeData={storeData}> <Navbar></Navbar></Home>} />
-        <Route path="/shop" element={<Shop shopBlur={shopBlur} blurToggleOff={blurToggleOff} blurToggleOn={blurToggleOn} deleteItem={deleteItem} addItem={addItem} cartIds={cartIds} totalCartItems={totalCartItems} fakeStoreData={fetchFakeStoreApi} storeData={storeData}><Navbar> </Navbar> </Shop>} />
+        <Route path="/shop" element={<Shop errorMsg={errorMsg} shopBlur={shopBlur} blurToggleOff={blurToggleOff} blurToggleOn={blurToggleOn} deleteItem={deleteItem} addItem={addItem} cartIds={cartIds} totalCartItems={totalCartItems} fakeStoreData={fetchFakeStoreApi} storeData={storeData}><Navbar> </Navbar> </Shop>} />
       </Routes>
     </BrowserRouter>
   )
