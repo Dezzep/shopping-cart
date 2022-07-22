@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Home from "./components/Home";
 import Shop from "./components/Shop";
 import Navbar from "./components/Navbar";
@@ -48,6 +48,9 @@ const RouteSwitch = () => {
     removeFromArrayOfIdsForShoppingCart(id);
     localStorage.setItem('totalCartItems', JSON.stringify(totalCartItems));
   }
+  useEffect(() => {
+    fetchFakeStoreApi()
+  })
 
   const shopBlur = () => {
     

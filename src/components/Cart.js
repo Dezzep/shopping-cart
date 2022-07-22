@@ -62,7 +62,7 @@ useEffect(() => {
       <div className="absolute right-0 top-28 sm:top-20 p-1  h-full">
           <ul className={`menu h-screen p-2 overflow-y-auto w-80 md:w-96 bg-base-300 text-base-content ease-in-out duration-500 ${props.display? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="sticky top-0 right-0 grid grid-cols-2 mb-4 bg-secondary/90 text-primary-focus p-4 py-4 z-50">
-              <label className="btn text-secondary-content btn-success hover:bg-primary/40 mr-2 modal-button" htmlFor="checkoutTime">Checkout</label>
+              <button className="btn text-secondary-content btn-success hover:bg-primary/40 mr-2 tooltip tooltip-bottom" data-tip="This Store Isn't Real :(">Checkout</button>
               <button onClick={props.toggleCartWithButton} id="close-cart" className="btn btn-danger bg-red-600">Close</button>
               <div>
               <h1 className="mt-4 p-2 font-bold select-none h-16">Total Price:<br></br>{totalPrice()}</h1>
