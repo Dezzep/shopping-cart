@@ -8,9 +8,11 @@ const Home = (props) => {
     localStorage.setItem('totalCartItems', JSON.stringify(props.totalCartItems));
   
   }, [props.totalCartItems])
+
   return (
     <div>
-      <Navbar deleteItem={props.deleteItem} cartDisplay={props.totalCartItems} cartIds={props.cartIds} data={props.storeData} addItem={props.addItem}/>
+      <Navbar blurToggleOn={props.blurToggleOn} blurToggleOff={props.blurToggleOff} deleteItem={props.deleteItem} cartDisplay={props.totalCartItems} cartIds={props.cartIds} data={props.storeData} addItem={props.addItem}/>
+        {props.shopBlur()}
       <div className="hero min-h-screen" style={{backgroundImage: `url(${process.env.PUBLIC_URL + '/hero.jpg'})` }} >
         <div className="hero-overlay bg-opacity-50"></div>
         <div className="hero-content text-center text-neutral-content">

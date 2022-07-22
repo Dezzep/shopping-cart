@@ -1,5 +1,5 @@
 import Navbar from "./Navbar";
-import { useEffect } from "react";
+import { useEffect} from "react";
 import ShopCards from "./ShopCards";
 
 const Shop = (props) => {
@@ -16,6 +16,8 @@ const Shop = (props) => {
     localStorage.setItem('cartIds', JSON.stringify(props.cartIds));
   
   }, [props.cartIds])
+
+ 
   
   
   
@@ -35,8 +37,10 @@ for (const i in props.storeData) {
 
   return (
     <div className="bg-base-100 mt-36">
-      <Navbar deleteItem={props.deleteItem} cartDisplay={props.totalCartItems} addItem={props.addItem} cartIds={props.cartIds} data={props.storeData} />
-      <h1 className="text-2xl text-center mb-12">Shop</h1>
+      <Navbar blurToggleOn={props.blurToggleOn} blurToggleOff={props.blurToggleOff} deleteItem={props.deleteItem} cartDisplay={props.totalCartItems} addItem={props.addItem} cartIds={props.cartIds} data={props.storeData} />
+            {props.shopBlur()}
+
+      <h1 className="text-2xl text-center mb-12 z-10">Shop</h1>
     <div className="flex flex-wrap justify-center gap-6 sm:ml-12 sm:mr-12 md:ml-12 md:mr-12">
       {arrayOfCards}
     </div>

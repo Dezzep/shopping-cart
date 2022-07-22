@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 
 const RouteSwitch = () => {
 
+  const [blurEffect, setBlurEffect] = useState(false)
   const [storeData, setStoreData] = useState('')
   const [totalCartItems, setTotalCartItems] = useState( // TOTAL QUANTITY OF ITEMS IN CART
     JSON.parse(localStorage.getItem('totalCartItems')) || 0
@@ -48,11 +49,26 @@ const RouteSwitch = () => {
     localStorage.setItem('totalCartItems', JSON.stringify(totalCartItems));
   }
 
+  const shopBlur = () => {
+    
+    if (blurEffect) {
+      return(<div className="bg-red-400/60 pointer-events-none fixed z-20 top-0 right-0 bottom-0 left-0 animate-[opTransition_300ms_ease-in-out]"></div>)
+    } else {
+      return(null)
+    }
+  }
+  const blurToggleOff = () => {
+    setBlurEffect(false);
+  }
+  const blurToggleOn = () => {
+    setBlurEffect(true);
+  }
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home deleteItem={deleteItem} addItem={addItem} totalCartItems={totalCartItems} cartIds={cartIds} fakeStoreData={fetchFakeStoreApi} storeData={storeData}> <Navbar></Navbar></Home>} />
-        <Route path="/shop" element={<Shop deleteItem={deleteItem} addItem={addItem} cartIds={cartIds} totalCartItems={totalCartItems} fakeStoreData={fetchFakeStoreApi} storeData={storeData}><Navbar> </Navbar> </Shop>} />
+        <Route path="/" element={<Home shopBlur={shopBlur} blurToggleOff={blurToggleOff} blurToggleOn={blurToggleOn} deleteItem={deleteItem} addItem={addItem} totalCartItems={totalCartItems} cartIds={cartIds} fakeStoreData={fetchFakeStoreApi} storeData={storeData}> <Navbar></Navbar></Home>} />
+        <Route path="/shop" element={<Shop shopBlur={shopBlur} blurToggleOff={blurToggleOff} blurToggleOn={blurToggleOn} deleteItem={deleteItem} addItem={addItem} cartIds={cartIds} totalCartItems={totalCartItems} fakeStoreData={fetchFakeStoreApi} storeData={storeData}><Navbar> </Navbar> </Shop>} />
       </Routes>
     </BrowserRouter>
   )
