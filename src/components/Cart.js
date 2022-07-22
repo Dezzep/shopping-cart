@@ -59,7 +59,7 @@ useEffect(() => {
   
   return (
     <div id="shopping_cart" ref={cartRef}>
-      <div className="absolute right-0 top-28 sm:top-20 p-1  h-full">
+      <div className="absolute right-0 top-28 sm:top-20 h-full">
           <ul className={`menu h-screen p-2 overflow-y-auto w-80 md:w-96 bg-base-300 text-base-content ease-in-out duration-500 ${props.display? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="sticky top-0 right-0 grid grid-cols-2 mb-4 bg-secondary/90 text-primary-focus p-4 py-4 z-50">
               <button className="btn text-secondary-content btn-success hover:bg-primary/40 mr-2 tooltip tooltip-bottom" data-tip="This Store Isn't Real :(">Checkout</button>
