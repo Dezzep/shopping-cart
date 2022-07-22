@@ -47,7 +47,6 @@ const totalPrice = () => {
     let price = 0;
   if (props.data && props.cartIds) {
     for (const key in props.cartIds) {
-      console.log(`${props.data[key].price} + ${props.cartIds[key]}`)
       price += props.data[key].price * props.cartIds[key]
     }
     return `${price.toFixed(2)}$`;
@@ -69,12 +68,12 @@ useEffect(() => {
               <button onClick={props.toggleCartWithButton} id="close-cart" className="btn btn-danger bg-red-600">Close</button>
               <div>
               <h1 className="mt-4 p-2">Total: {totalPrice()}</h1>
-              <h1 className="p-2"> Total Items: {props.data === undefined ? 0 : props.data}</h1>
+              <h1 className="p-2"> Total Items: {props.data === undefined ? '0' : props.rendering}</h1>
               </div>
               </div>
             <h1 className="mb-4 text-xl font-bold text-center">Your Cart</h1>
               
-            <h1 className="text-center text-xl text-secondary-content bg-secondary"> {props.data === undefined ? 'Your Cart is Empty!' : null}</h1>
+            <h1 className="text-center text-xl text-secondary-content bg-secondary"> {props.rendering === undefined ? 'Your Cart is Empty!' : ''}</h1>
            
             <div className="mb-24">{theShop}</div>
           </ul>
