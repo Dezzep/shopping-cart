@@ -51,23 +51,21 @@ const totalPrice = () => {
     }
     return `${price.toFixed(2)}$`;
   }
-
 }
 useEffect(() => {
   totalPrice()
 })
-
   const theShop = shopArray();
-
+  
   return (
     <div id="shopping_cart" ref={cartRef}>
       <div className="absolute right-0 top-28 sm:top-20 p-1  h-full">
           <ul className={`menu h-screen p-2 overflow-y-auto w-80 md:w-96 bg-base-300 text-base-content ease-in-out duration-500 ${props.display? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="sticky top-0 right-0 grid grid-cols-2 mb-4 bg-secondary/90 text-primary-focus p-4 py-4 z-50">
-              <button className="btn text-secondary-content btn-success hover:bg-primary/40 mr-2">Checkout</button>
+              <label className="btn text-secondary-content btn-success hover:bg-primary/40 mr-2 modal-button" htmlFor="checkoutTime">Checkout</label>
               <button onClick={props.toggleCartWithButton} id="close-cart" className="btn btn-danger bg-red-600">Close</button>
               <div>
-              <h1 className="mt-4 p-2 font-bold select-none">Total Price: {totalPrice()}</h1>
+              <h1 className="mt-4 p-2 font-bold select-none h-16">Total Price:<br></br>{totalPrice()}</h1>
               <h1 className=" px-2 font-bold select-none"> Total Items: {props.data === undefined ? '0' : props.rendering}</h1>
               </div>
               </div>
@@ -77,9 +75,7 @@ useEffect(() => {
            
             <div className="mb-24">{theShop}</div>
           </ul>
-          
       </div>
-      
     </div>
   )
 }
