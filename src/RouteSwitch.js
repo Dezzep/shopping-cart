@@ -65,7 +65,7 @@ const RouteSwitch = () => {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Routes>
         <Route path="/" element={<Home shopBlur={shopBlur} blurToggleOff={blurToggleOff} blurToggleOn={blurToggleOn} deleteItem={deleteItem} addItem={addItem} totalCartItems={totalCartItems} cartIds={cartIds} fakeStoreData={fetchFakeStoreApi} storeData={storeData}> <Navbar></Navbar></Home>} />
         <Route path="/shop" element={<Shop shopBlur={shopBlur} blurToggleOff={blurToggleOff} blurToggleOn={blurToggleOn} deleteItem={deleteItem} addItem={addItem} cartIds={cartIds} totalCartItems={totalCartItems} fakeStoreData={fetchFakeStoreApi} storeData={storeData}><Navbar> </Navbar> </Shop>} />
