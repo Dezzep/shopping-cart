@@ -7,11 +7,10 @@ Option 1:
 - Click github-pages
 - Click View Deployment
 - If you don't see the Environments section, you can alternatively use this link: link_here
-------
 Option 2:
-git clone git@github.com:Dezzep/shopping-cart.gitcd shopping-cart
-npm install
-npm start
+- git clone git@github.com:Dezzep/shopping-cart.gitcd shopping-cart
+- npm install
+- npm start
 
 # Key Features:
   - Data for the store comes from an API (https://fakestoreapi.com/)
