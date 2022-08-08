@@ -9,7 +9,8 @@ Option 1:
 - If you don't see the Environments section, you can alternatively use this link: https://dezzep.github.io/shopping-cart/
 -------------
 - Option 2:
-- git clone git@github.com:Dezzep/shopping-cart.gitcd shopping-cart
+- git clone git@github.com:Dezzep/shopping-cart.git
+- cd shopping-cart
 - npm install
 - npm start
 
