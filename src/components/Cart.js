@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import CartCards from './CartCards';
+import Modal from './Modal';
 
 const Cart = (props) => {
   const [rerender, setRerender] = useState(props.rendering);
@@ -82,12 +83,16 @@ const Cart = (props) => {
           }`}
         >
           <div className="sticky top-0 right-0 grid grid-cols-2 mb-4 bg-secondary/90 text-primary-focus p-4 py-4 z-50">
-            <button
-              className="btn text-secondary-content btn-success hover:bg-primary/40 mr-2 tooltip tooltip-bottom"
-              data-tip="This Store Isn't Real :("
-            >
-              Checkout
-            </button>
+            {props.data === undefined ? null : (
+              <Modal />
+              // <button
+              //   className="btn text-secondary-content btn-success hover:bg-primary/40 mr-2 tooltip tooltip-bottom"
+              //   data-tip="This Store Isn't Real :("
+              // >
+              //   Checkout
+              // </button>
+            )}
+
             <button
               onClick={props.toggleCartWithButton}
               id="close-cart"
@@ -95,16 +100,19 @@ const Cart = (props) => {
             >
               Close
             </button>
-            <div>
-              <h1 className="mt-4 p-2 font-bold select-none h-16">
-                Total Price:<br></br>
-                {totalPrice()}
-              </h1>
-              <h1 className=" px-2 font-bold select-none">
-                {' '}
-                Total Items: {props.data === undefined ? '0' : props.rendering}
-              </h1>
-            </div>
+            {props.data === undefined ? null : (
+              <div>
+                <h1 className="mt-4 p-2 font-bold select-none h-16">
+                  Total Price:<br></br>
+                  {totalPrice()}
+                </h1>
+                <h1 className=" px-2 font-bold select-none">
+                  {' '}
+                  Total Items:{' '}
+                  {props.data === undefined ? '0' : props.rendering}
+                </h1>
+              </div>
+            )}
           </div>
           <h1 className="mb-4 text-xl font-bold text-center select-none">
             Your Cart
@@ -112,7 +120,7 @@ const Cart = (props) => {
 
           <h1 className="text-center text-xl text-secondary-content bg-secondary">
             {' '}
-            {props.rendering === undefined ? 'Your Cart is Empty!' : ''}
+            {props.rendering === undefined ? 'Your Cart is Empty' : ''}
           </h1>
 
           <div className="mb-24">{theShop}</div>

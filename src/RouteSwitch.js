@@ -4,6 +4,7 @@ import Home from './components/Home';
 import Shop from './components/Shop';
 import Navbar from './components/Navbar';
 
+
 const RouteSwitch = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [blurEffect, setBlurEffect] = useState(false);

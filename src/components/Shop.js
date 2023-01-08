@@ -81,7 +81,7 @@ const Shop = (props) => {
       arrayOfCards.push(
         <ShopCards
           title={props.storeData[i].TITLE}
-          key={props.storeData[i].TITLE}
+          key={`${props.storeData[i].TITLE}_${props.storeData}`}
           image={props.storeData[i].IMAGE}
           idKey={props.storeData[i].ID}
           price={props.storeData[i].PRICE.toFixed(2)} // To fixed makes sure all prices look like ex: 12.3 = 12.30
