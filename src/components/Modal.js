@@ -4,6 +4,8 @@ import { useState } from 'react';
 export default function Modal() {
   const [showModal, setShowModal] = useState(false);
   const [accountValid, setAccountValid] = useState(false);
+  const [signInEmail, setSignInEmail] = useState('');
+  const [signInPassword, setSignInPassword] = useState('');
   const [signIn, setSignIn] = useState(false);
   const [signUpFirstName, setSignUpFirstName] = useState('');
   const [signUpLastName, setSignUpLastName] = useState('');
@@ -21,6 +23,7 @@ export default function Modal() {
   const [lastNameBackground, setLastNameBackground] = useState('');
   const [creditCardBackground, setCreditCardBackground] = useState('');
   const [cvvBackground, setCvvBackground] = useState('');
+  const [loginPasswordBackground, setLoginPasswordBackground] = useState('');
   const errorInputStyle = 'input-bordered border-red-600 bg-red-200';
   const emailRegex =
     /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
@@ -32,99 +35,139 @@ export default function Modal() {
   };
 
   const handleSubmit = async () => {
-    let resume = 1;
-    const setError = (checkValue) => {
-      if (checkValue.length < 1) {
+    if (signIn) {
+      let resume = 1;
+      const setError = (checkValue) => {
+        if (checkValue.length < 1) {
+          resume = 0;
+          checkValue === signUpFirstName
+            ? setFirstNameBackground(errorInputStyle)
+            : setFirstNameBackground('');
+
+          checkValue === signUpLastName
+            ? setLastNameBackground(errorInputStyle)
+            : setLastNameBackground('');
+
+          checkValue === signUpEmail
+            ? setEmailBackground(errorInputStyle)
+            : setEmailBackground('');
+
+          checkValue === signUpPassword
+            ? setPasswordBackground(errorInputStyle)
+            : setPasswordBackground('');
+
+          checkValue === signUpPasswordVerify
+            ? setConfirmPasswordBackground(errorInputStyle)
+            : setConfirmPasswordBackground('');
+          checkValue === signUpCredit
+            ? setCreditCardBackground(errorInputStyle)
+            : setCreditCardBackground('');
+          checkValue === signUpCvv
+            ? setCvvBackground(errorInputStyle)
+            : setCvvBackground('');
+
+          setResponse('Please fill out required fields');
+
+          setTimeout(() => {
+            setResponse(null);
+          }, 3000);
+        }
+      };
+      setError(signUpFirstName);
+      setError(signUpEmail);
+      setError(signUpLastName);
+      setError(signUpCredit);
+      setError(signUpPasswordVerify);
+      setError(signUpPassword);
+      setError(signUpCvv);
+      if (signUpPassword !== signUpPasswordVerify) {
+        setPasswordBackground(errorInputStyle);
+        setConfirmPasswordBackground(errorInputStyle);
+        setResponse('Your passwords do not match');
+        setTimeout(() => {
+          setResponse(null);
+        }, 3000);
+
         resume = 0;
-        checkValue === signUpFirstName
-          ? setFirstNameBackground(errorInputStyle)
-          : setFirstNameBackground('');
-
-        checkValue === signUpLastName
-          ? setLastNameBackground(errorInputStyle)
-          : setLastNameBackground('');
-
-        checkValue === signUpEmail
-          ? setEmailBackground(errorInputStyle)
-          : setEmailBackground('');
-
-        checkValue === signUpPassword
-          ? setPasswordBackground(errorInputStyle)
-          : setPasswordBackground('');
-
-        checkValue === signUpPasswordVerify
-          ? setConfirmPasswordBackground(errorInputStyle)
-          : setConfirmPasswordBackground('');
-        checkValue === signUpCredit
-          ? setCreditCardBackground(errorInputStyle)
-          : setCreditCardBackground('');
-        checkValue === signUpCvv
-          ? setCvvBackground(errorInputStyle)
-          : setCvvBackground('');
-
-        setResponse('Please fill out required fields');
-
+      }
+      if (!emailRegex.test(signUpEmail)) {
+        setResponse('Email Address invalid');
+        setEmailBackground(errorInputStyle);
+        resume = 0;
         setTimeout(() => {
           setResponse(null);
         }, 3000);
       }
-    };
-    setError(signUpFirstName);
-    setError(signUpEmail);
-    setError(signUpLastName);
-    setError(signUpCredit);
-    setError(signUpPasswordVerify);
-    setError(signUpPassword);
-    setError(signUpCvv);
-    if (signUpPassword !== signUpPasswordVerify) {
-      setPasswordBackground(errorInputStyle);
-      setConfirmPasswordBackground(errorInputStyle);
-      setResponse('Your passwords do not match');
-      setTimeout(() => {
-        setResponse(null);
-      }, 3000);
 
-      resume = 0;
-    }
-    if (!emailRegex.test(signUpEmail)) {
-      setResponse('Email Address invalid');
-      setEmailBackground(errorInputStyle);
-      resume = 0;
-      setTimeout(() => {
-        setResponse(null);
-      }, 3000);
-    }
+      if (resume) {
+        const data = {
+          signUpFirstName,
+          signUpLastName,
+          signUpEmail,
+          signUpPassword,
+          signUpCredit,
+          signUpCvv,
+        };
 
-    if (resume) {
+        const params = new URLSearchParams();
+        for (const key in data) {
+          params.append(key, data[key]);
+        }
+        const response = await fetch(
+          'http://localhost:3000/api/user_accounts',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+
+            body: params,
+          }
+        );
+
+        const statusMessage = async () => {
+          if (response.ok) {
+            setResponse('Account has been created!');
+            setAccountValid(true);
+          }
+          console.log(response);
+          if (!response.ok) {
+            setResponse('That email address already exists!');
+            setEmailBackground(errorInputStyle);
+            setTimeout(() => {
+              setResponse(null);
+            }, 3000);
+          }
+        };
+        await statusMessage().then(responseFromServer);
+      }
+    } else {
       const data = {
-        signUpFirstName,
-        signUpLastName,
-        signUpEmail,
-        signUpPassword,
-        signUpCredit,
-        signUpCvv,
+        signInEmail,
+        signInPassword,
       };
 
       const params = new URLSearchParams();
       for (const key in data) {
         params.append(key, data[key]);
       }
-      const response = await fetch('http://localhost:3000/api/user_accounts', {
+      const response = await fetch('http://localhost:3000/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 
         body: params,
-      });
+      })
+      console.log('a');
 
       const statusMessage = async () => {
+        console.log('a');
         if (response.ok) {
           setResponse('Account has been created!');
           setAccountValid(true);
         }
         console.log(response);
         if (!response.ok) {
-          setResponse('That email address already exists!');
+          setResponse('Invalid email or password');
           setEmailBackground(errorInputStyle);
+          setLoginPasswordBackground(errorInputStyle);
           setTimeout(() => {
             setResponse(null);
           }, 3000);
@@ -141,11 +184,11 @@ export default function Modal() {
   return (
     <>
       <button
-        className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+        className="btn btn-success bg-emerald-500 text-white active:bg-pink-600 mb-2"
         type="button"
         onClick={() => setShowModal(true)}
       >
-        Open regular modal
+        Sign In To Checkout
       </button>
       {showModal ? (
         <>
@@ -180,78 +223,106 @@ export default function Modal() {
                 </div>
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
-                  <form>
-                    <h1 className="text-xl">
-                      {' '}
-                      This form is fake, please do not put any real credit card
-                      information
-                    </h1>
-                    <p className="label">First Name</p>
-                    <input
-                      className={`input  input-sm ${firstNameBackground}`}
-                      onChange={(e) => {
-                        setSignUpFirstName(e.target.value);
-                        setFirstNameBackground('');
-                      }}
-                    ></input>
-                    <p className="label">Last Name</p>
-                    <input
-                      className={`input  input-sm ${lastNameBackground}`}
-                      onChange={(e) => {
-                        setSignUpLastName(e.target.value);
-                        setLastNameBackground('');
-                      }}
-                    ></input>
-                    <p className="label">Email Address</p>
-                    <input
-                      type="email"
-                      className={`input  input-sm ${emailBackground}`}
-                      onChange={(e) => {
-                        setSignUpEmail(e.target.value);
-                        isValidEmail(e.target.value);
-                      }}
-                    ></input>
-                    <p className="label">Password</p>
-                    <input
-                      type="password"
-                      className={`input  input-sm ${passwordBackground}`}
-                      onChange={(e) => {
-                        setSignUpPassword(e.target.value);
-                        setPasswordBackground('');
-                        setConfirmPasswordBackground('');
-                      }}
-                    ></input>
-                    <p className="label">Confrim your password</p>
-                    <input
-                      type="password"
-                      className={`input  input-sm ${confirmPasswordBackground}`}
-                      onChange={(e) => {
-                        setSignUpPasswordVerify(e.target.value);
-                        setConfirmPasswordBackground('');
-                        setPasswordBackground('');
-                      }}
-                    ></input>
-                    <p className="label">Credit Card</p>
-                    <input
-                      type="number"
-                      className={`input  input-sm ${creditCardBackground}`}
-                      onChange={(e) => {
-                        setSignUpCredit(e.target.value);
-                        setCreditCardBackground('');
-                      }}
-                    ></input>
-                    <p className="label">CVV Code</p>
-                    <input
-                      type="number"
-                      className={`input  input-sm ${cvvBackground}`}
-                      onChange={(e) => {
-                        setSignUpCvv(e.target.value);
-                        setCvvBackground('');
-                      }}
-                    ></input>
-                  </form>
+                  {signIn ? (
+                    <form>
+                      <h1 className="text-xl">
+                        {' '}
+                        This form is fake, please do not put any real credit
+                        card information
+                      </h1>
+                      <p className="label">First Name</p>
+                      <input
+                        className={`input  input-sm ${firstNameBackground}`}
+                        onChange={(e) => {
+                          setSignUpFirstName(e.target.value);
+                          setFirstNameBackground('');
+                        }}
+                      ></input>
+                      <p className="label">Last Name</p>
+                      <input
+                        className={`input  input-sm ${lastNameBackground}`}
+                        onChange={(e) => {
+                          setSignUpLastName(e.target.value);
+                          setLastNameBackground('');
+                        }}
+                      ></input>
+                      <p className="label">Email Address</p>
+                      <input
+                        type="email"
+                        className={`input  input-sm ${emailBackground}`}
+                        onChange={(e) => {
+                          setSignUpEmail(e.target.value);
+                          isValidEmail(e.target.value);
+                        }}
+                      ></input>
+                      <p className="label">Password</p>
+                      <input
+                        type="password"
+                        className={`input  input-sm ${passwordBackground}`}
+                        onChange={(e) => {
+                          setSignUpPassword(e.target.value);
+                          setPasswordBackground('');
+                          setConfirmPasswordBackground('');
+                        }}
+                      ></input>
+                      <p className="label">Confrim your password</p>
+                      <input
+                        type="password"
+                        className={`input  input-sm ${confirmPasswordBackground}`}
+                        onChange={(e) => {
+                          setSignUpPasswordVerify(e.target.value);
+                          setConfirmPasswordBackground('');
+                          setPasswordBackground('');
+                        }}
+                      ></input>
+                      <p className="label">Credit Card</p>
+                      <input
+                        type="number"
+                        className={`input  input-sm ${creditCardBackground}`}
+                        onChange={(e) => {
+                          setSignUpCredit(e.target.value);
+                          setCreditCardBackground('');
+                        }}
+                      ></input>
+                      <p className="label">CVV Code</p>
+                      <input
+                        type="number"
+                        className={`input  input-sm ${cvvBackground}`}
+                        onChange={(e) => {
+                          setSignUpCvv(e.target.value);
+                          setCvvBackground('');
+                        }}
+                      ></input>
+                    </form>
+                  ) : (
+                    <form>
+                      <h1 className="text-xl">
+                        Sign in to your account to Checkout
+                      </h1>
+                      <p className="label">Email Address</p>
+                      <input
+                        type="email"
+                        className={`input  input-sm ${emailBackground}`}
+                        onChange={(e) => {
+                          setSignInEmail(e.target.value);
+                          isValidEmail(e.target.value);
+                        }}
+                      ></input>
+                      <p className="label">Password</p>
+
+                      <input
+                        type="password"
+                        className={`input  input-sm ${loginPasswordBackground}`}
+                        onChange={(e) => {
+                          setSignInPassword(e.target.value);
+                          setLoginPasswordBackground('');
+                        }}
+                      ></input>
+                    </form>
+                  )}
                 </div>
                 {/*footer*/}
+
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                   <button
                     className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
@@ -260,13 +331,14 @@ export default function Modal() {
                   >
                     Close
                   </button>
+
                   <button
                     className="bg-emerald-500 text-white hover:bg-emerald-700 active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="submit"
                     onClick={() => handleSubmit()}
                   >
                     {!responseFromServer ? (
-                      <p>Save Changes</p>
+                      <p>Submit</p>
                     ) : (
                       <p className="text-red-300">{responseFromServer}</p>
                     )}

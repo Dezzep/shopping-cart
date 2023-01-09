@@ -82,7 +82,7 @@ const Cart = (props) => {
             props.display ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
-          <div className="sticky top-0 right-0 grid grid-cols-2 mb-4 bg-secondary/90 text-primary-focus p-4 py-4 z-50">
+          <div className="sticky top-0 right-0 grid grid-cols-1 mb-4 bg-secondary/90 text-primary-focus p-4 py-4 z-50">
             {props.data === undefined ? null : (
               <Modal />
               // <button
@@ -96,9 +96,9 @@ const Cart = (props) => {
             <button
               onClick={props.toggleCartWithButton}
               id="close-cart"
-              className="btn btn-danger bg-red-600"
+              className="btn btn-danger bg-red-600 hover:bg-red-700 action:shadow-lg action:scale-1"
             >
-              Close
+              Close Cart
             </button>
             {props.data === undefined ? null : (
               <div>
