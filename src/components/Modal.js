@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 export default function Modal() {
   const [showModal, setShowModal] = useState(false);
+  const [accountValid, setAccountValid] = useState(false);
   const [signIn, setSignIn] = useState(false);
   const [signUpFirstName, setSignUpFirstName] = useState('');
   const [signUpLastName, setSignUpLastName] = useState('');
@@ -11,41 +12,132 @@ export default function Modal() {
   const [signUpPasswordVerify, setSignUpPasswordVerify] = useState('');
   const [signUpCredit, setSignUpCredit] = useState('');
   const [signUpCvv, setSignUpCvv] = useState('');
-  const [response, setResponse] = useState(null);
+  const [responseFromServer, setResponse] = useState(null);
+  const [emailBackground, setEmailBackground] = useState('');
+  const [passwordBackground, setPasswordBackground] = useState('');
+  const [confirmPasswordBackground, setConfirmPasswordBackground] =
+    useState('');
+  const [firstNameBackground, setFirstNameBackground] = useState('');
+  const [lastNameBackground, setLastNameBackground] = useState('');
+  const [creditCardBackground, setCreditCardBackground] = useState('');
+  const [cvvBackground, setCvvBackground] = useState('');
+  const errorInputStyle = 'input-bordered border-red-600 bg-red-200';
+  const emailRegex =
+    /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
+
+  const isValidEmail = (email) => {
+    emailRegex.test(email)
+      ? setEmailBackground('')
+      : setEmailBackground(errorInputStyle);
+  };
 
   const handleSubmit = async () => {
-    console.log(
-      signUpFirstName,
-      signUpLastName,
-      signUpEmail,
-      signUpPassword,
-      signUpPasswordVerify,
-      signUpCredit,
-      signUpCvv
-    );
-    const data = {
-      signUpFirstName,
-      signUpLastName,
-      signUpEmail,
-      signUpPassword,
-      signUpCredit,
-      signUpCvv,
+    let resume = 1;
+    const setError = (checkValue) => {
+      if (checkValue.length < 1) {
+        resume = 0;
+        checkValue === signUpFirstName
+          ? setFirstNameBackground(errorInputStyle)
+          : setFirstNameBackground('');
+
+        checkValue === signUpLastName
+          ? setLastNameBackground(errorInputStyle)
+          : setLastNameBackground('');
+
+        checkValue === signUpEmail
+          ? setEmailBackground(errorInputStyle)
+          : setEmailBackground('');
+
+        checkValue === signUpPassword
+          ? setPasswordBackground(errorInputStyle)
+          : setPasswordBackground('');
+
+        checkValue === signUpPasswordVerify
+          ? setConfirmPasswordBackground(errorInputStyle)
+          : setConfirmPasswordBackground('');
+        checkValue === signUpCredit
+          ? setCreditCardBackground(errorInputStyle)
+          : setCreditCardBackground('');
+        checkValue === signUpCvv
+          ? setCvvBackground(errorInputStyle)
+          : setCvvBackground('');
+
+        setResponse('Please fill out required fields');
+
+        setTimeout(() => {
+          setResponse(null);
+        }, 3000);
+      }
     };
+    setError(signUpFirstName);
+    setError(signUpEmail);
+    setError(signUpLastName);
+    setError(signUpCredit);
+    setError(signUpPasswordVerify);
+    setError(signUpPassword);
+    setError(signUpCvv);
+    if (signUpPassword !== signUpPasswordVerify) {
+      setPasswordBackground(errorInputStyle);
+      setConfirmPasswordBackground(errorInputStyle);
+      setResponse('Your passwords do not match');
+      setTimeout(() => {
+        setResponse(null);
+      }, 3000);
 
-    const params = new URLSearchParams();
-    for (const key in data) {
-      params.append(key, data[key]);
+      resume = 0;
     }
-    const response = await fetch('http://localhost:3000/api/user_accounts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    if (!emailRegex.test(signUpEmail)) {
+      setResponse('Email Address invalid');
+      setEmailBackground(errorInputStyle);
+      resume = 0;
+      setTimeout(() => {
+        setResponse(null);
+      }, 3000);
+    }
 
-      body: params,
-    });
+    if (resume) {
+      const data = {
+        signUpFirstName,
+        signUpLastName,
+        signUpEmail,
+        signUpPassword,
+        signUpCredit,
+        signUpCvv,
+      };
 
-    setResponse(response);
-    console.log(response);
+      const params = new URLSearchParams();
+      for (const key in data) {
+        params.append(key, data[key]);
+      }
+      const response = await fetch('http://localhost:3000/api/user_accounts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+
+        body: params,
+      });
+
+      const statusMessage = async () => {
+        if (response.ok) {
+          setResponse('Account has been created!');
+          setAccountValid(true);
+        }
+        console.log(response);
+        if (!response.ok) {
+          setResponse('That email address already exists!');
+          setEmailBackground(errorInputStyle);
+          setTimeout(() => {
+            setResponse(null);
+          }, 3000);
+        }
+      };
+      await statusMessage().then(responseFromServer);
+    }
   };
+
+  if (accountValid) {
+    return <div>Account created ready to check out?</div>;
+  }
+
   return (
     <>
       <button
@@ -58,11 +150,11 @@ export default function Modal() {
       {showModal ? (
         <>
           <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed  inset-0 z-50 outline-none focus:outline-none">
-            <div className="fixed w-auto my-6 mx-auto max-w-3xl h-full">
+            <div className="relative w-auto my-6 mx-auto max-w-3xl h-full ">
               {/*content*/}
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none ">
                 {/*header*/}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t ">
                   <div>
                     <h3 className="text-3xl font-semibold">One last step</h3>
                     <button
@@ -96,43 +188,66 @@ export default function Modal() {
                     </h1>
                     <p className="label">First Name</p>
                     <input
-                      className="input input-bordered input-sm"
-                      onChange={(e) => setSignUpFirstName(e.target.value)}
+                      className={`input  input-sm ${firstNameBackground}`}
+                      onChange={(e) => {
+                        setSignUpFirstName(e.target.value);
+                        setFirstNameBackground('');
+                      }}
                     ></input>
                     <p className="label">Last Name</p>
                     <input
-                      className="input input-bordered input-sm"
-                      onChange={(e) => setSignUpLastName(e.target.value)}
+                      className={`input  input-sm ${lastNameBackground}`}
+                      onChange={(e) => {
+                        setSignUpLastName(e.target.value);
+                        setLastNameBackground('');
+                      }}
                     ></input>
                     <p className="label">Email Address</p>
                     <input
                       type="email"
-                      className="input input-bordered input-sm"
-                      onChange={(e) => setSignUpEmail(e.target.value)}
+                      className={`input  input-sm ${emailBackground}`}
+                      onChange={(e) => {
+                        setSignUpEmail(e.target.value);
+                        isValidEmail(e.target.value);
+                      }}
                     ></input>
                     <p className="label">Password</p>
                     <input
                       type="password"
-                      className="input input-bordered input-sm"
-                      onChange={(e) => setSignUpPassword(e.target.value)}
+                      className={`input  input-sm ${passwordBackground}`}
+                      onChange={(e) => {
+                        setSignUpPassword(e.target.value);
+                        setPasswordBackground('');
+                        setConfirmPasswordBackground('');
+                      }}
                     ></input>
                     <p className="label">Confrim your password</p>
                     <input
                       type="password"
-                      className="input input-bordered input-sm"
-                      onChange={(e) => setSignUpPasswordVerify(e.target.value)}
+                      className={`input  input-sm ${confirmPasswordBackground}`}
+                      onChange={(e) => {
+                        setSignUpPasswordVerify(e.target.value);
+                        setConfirmPasswordBackground('');
+                        setPasswordBackground('');
+                      }}
                     ></input>
                     <p className="label">Credit Card</p>
                     <input
                       type="number"
-                      className="input input-bordered input-sm"
-                      onChange={(e) => setSignUpCredit(e.target.value)}
+                      className={`input  input-sm ${creditCardBackground}`}
+                      onChange={(e) => {
+                        setSignUpCredit(e.target.value);
+                        setCreditCardBackground('');
+                      }}
                     ></input>
                     <p className="label">CVV Code</p>
                     <input
                       type="number"
-                      className="input input-bordered input-sm"
-                      onChange={(e) => setSignUpCvv(e.target.value)}
+                      className={`input  input-sm ${cvvBackground}`}
+                      onChange={(e) => {
+                        setSignUpCvv(e.target.value);
+                        setCvvBackground('');
+                      }}
                     ></input>
                   </form>
                 </div>
@@ -150,7 +265,11 @@ export default function Modal() {
                     type="submit"
                     onClick={() => handleSubmit()}
                   >
-                    Save Changes
+                    {!responseFromServer ? (
+                      <p>Save Changes</p>
+                    ) : (
+                      <p className="text-red-300">{responseFromServer}</p>
+                    )}
                   </button>
                 </div>
               </div>
