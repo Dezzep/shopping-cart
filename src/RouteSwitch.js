@@ -1,9 +1,8 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Home from './components/Home';
 import Shop from './components/Shop';
 import Navbar from './components/Navbar';
-
 
 const RouteSwitch = () => {
   const [errorMsg, setErrorMsg] = useState('');
@@ -24,7 +23,6 @@ const RouteSwitch = () => {
         const request = await fetch('http://localhost:3000/api/data/');
         const data = await request.json();
         setStoreData(data);
-        console.log(data);
       } catch (err) {
         setErrorMsg('Failed To Connect To The Store Server.');
       }
@@ -115,6 +113,20 @@ const RouteSwitch = () => {
             >
               <Navbar> </Navbar>{' '}
             </Shop>
+          }
+        />
+        <Route
+          path="/order"
+          element={
+            
+            <div className="flex flex-col items-center justify-center h-screen">
+              <h1 className="text-4xl font-bold text-gray-800">
+                Order Page Coming Soon
+              </h1>
+              <p className="text-2xl font-bold text-gray-800">
+                <NavLink to="/">Go Back Home</NavLink>
+              </p>
+            </div>
           }
         />
       </Routes>

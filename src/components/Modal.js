@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 
-export default function Modal() {
+export default function Modal(props) {
   const [showModal, setShowModal] = useState(false);
   const [accountValid, setAccountValid] = useState(false);
   const [signInEmail, setSignInEmail] = useState('');
@@ -24,6 +24,7 @@ export default function Modal() {
   const [creditCardBackground, setCreditCardBackground] = useState('');
   const [cvvBackground, setCvvBackground] = useState('');
   const [loginPasswordBackground, setLoginPasswordBackground] = useState('');
+  const [loggedInEmail, setLoggedInEmail] = useState('');
   const errorInputStyle = 'input-bordered border-red-600 bg-red-200';
   const emailRegex =
     /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
@@ -34,6 +35,9 @@ export default function Modal() {
       : setEmailBackground(errorInputStyle);
   };
 
+  const setUsersEmailForParent = (email) => {
+    props.setUser(email);
+  };
   const handleSubmit = async () => {
     if (signIn) {
       let resume = 1;
@@ -127,6 +131,8 @@ export default function Modal() {
           if (response.ok) {
             setResponse('Account has been created!');
             setAccountValid(true);
+            setLoggedInEmail(signUpEmail);
+            setUsersEmailForParent(signUpEmail);
           }
           console.log(response);
           if (!response.ok) {
@@ -154,14 +160,14 @@ export default function Modal() {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 
         body: params,
-      })
-      console.log('a');
+      });
 
       const statusMessage = async () => {
-        console.log('a');
         if (response.ok) {
           setResponse('Account has been created!');
           setAccountValid(true);
+          setLoggedInEmail(signInEmail);
+          setUsersEmailForParent(signInEmail);
         }
         console.log(response);
         if (!response.ok) {
@@ -178,7 +184,9 @@ export default function Modal() {
   };
 
   if (accountValid) {
-    return <div>Account created ready to check out?</div>;
+    return (
+      <div className="text-bold">You are signed in as {loggedInEmail}</div>
+    );
   }
 
   return (
@@ -232,6 +240,8 @@ export default function Modal() {
                       </h1>
                       <p className="label">First Name</p>
                       <input
+                        value={signUpFirstName}
+                        name="first-name"
                         className={`input  input-sm ${firstNameBackground}`}
                         onChange={(e) => {
                           setSignUpFirstName(e.target.value);
@@ -240,6 +250,7 @@ export default function Modal() {
                       ></input>
                       <p className="label">Last Name</p>
                       <input
+                        value={signUpLastName}
                         className={`input  input-sm ${lastNameBackground}`}
                         onChange={(e) => {
                           setSignUpLastName(e.target.value);
@@ -248,6 +259,7 @@ export default function Modal() {
                       ></input>
                       <p className="label">Email Address</p>
                       <input
+                        value={signUpEmail}
                         type="email"
                         className={`input  input-sm ${emailBackground}`}
                         onChange={(e) => {
@@ -257,6 +269,7 @@ export default function Modal() {
                       ></input>
                       <p className="label">Password</p>
                       <input
+                        value={signUpPassword}
                         type="password"
                         className={`input  input-sm ${passwordBackground}`}
                         onChange={(e) => {
@@ -267,6 +280,7 @@ export default function Modal() {
                       ></input>
                       <p className="label">Confrim your password</p>
                       <input
+                        value={signUpPasswordVerify}
                         type="password"
                         className={`input  input-sm ${confirmPasswordBackground}`}
                         onChange={(e) => {
@@ -277,6 +291,7 @@ export default function Modal() {
                       ></input>
                       <p className="label">Credit Card</p>
                       <input
+                        value={signUpCredit}
                         type="number"
                         className={`input  input-sm ${creditCardBackground}`}
                         onChange={(e) => {
@@ -286,6 +301,7 @@ export default function Modal() {
                       ></input>
                       <p className="label">CVV Code</p>
                       <input
+                        value={signUpCvv}
                         type="number"
                         className={`input  input-sm ${cvvBackground}`}
                         onChange={(e) => {
@@ -295,12 +311,13 @@ export default function Modal() {
                       ></input>
                     </form>
                   ) : (
-                    <form>
+                    <form name="myForm">
                       <h1 className="text-xl">
                         Sign in to your account to Checkout
                       </h1>
                       <p className="label">Email Address</p>
                       <input
+                        value={signInEmail}
                         type="email"
                         className={`input  input-sm ${emailBackground}`}
                         onChange={(e) => {
@@ -311,6 +328,7 @@ export default function Modal() {
                       <p className="label">Password</p>
 
                       <input
+                        value={signInPassword}
                         type="password"
                         className={`input  input-sm ${loginPasswordBackground}`}
                         onChange={(e) => {

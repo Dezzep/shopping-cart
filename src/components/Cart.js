@@ -1,9 +1,64 @@
 import { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CartCards from './CartCards';
 import Modal from './Modal';
 
 const Cart = (props) => {
+  const navigate = useNavigate();
+
+  const [user, setUser] = useState(null);
+
   const [rerender, setRerender] = useState(props.rendering);
+
+  const checkOut = (email) => {
+    const createOrderId = () => {
+      return 'OID_' + Date.now() + '_R_' + Math.floor(Math.random() * 100);
+    };
+    const orderId = createOrderId();
+    // copy object and loop through the keys, increment the key by 1 (because index starts at 0)
+    const cartIds = { ...props.cartIds };
+    let cartIdsIncremented = {};
+    for (const key in cartIds) {
+      const obj = { [key]: cartIds[key] };
+      obj[parseInt(key) + 1] = obj[key];
+      delete obj[key];
+      cartIdsIncremented = { ...cartIdsIncremented, ...obj };
+    }
+    let x = 1;
+    for (const key in cartIdsIncremented) {
+      const data = {
+        o_id: orderId,
+        email,
+        item_id: key,
+        quantity: cartIdsIncremented[key],
+      };
+      const params = new URLSearchParams();
+      for (const key in data) {
+        params.append(key, data[key]);
+      }
+
+      try {
+        fetch('http://localhost:3000/api/checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: params,
+        });
+      } catch (err) {
+        x = 0;
+        console.log(err);
+      }
+    }
+    if (x === 1) {
+      localStorage.clear();
+      // refresh page
+
+      navigate('/order');
+      window.location.reload(false);
+    }
+  };
+
   useEffect(() => {
     if (props.rendering !== rerender) {
       setRerender(props.rendering);
@@ -38,7 +93,6 @@ const Cart = (props) => {
     }, [ref, ref2]);
   }
   useOutsideAlerter(cartRef, props.shopIconRef);
-  // ---------------------------------------- END OF COPY
 
   const shopArray = () => {
     if (props.data && props.cartIds) {
@@ -83,14 +137,15 @@ const Cart = (props) => {
           }`}
         >
           <div className="sticky top-0 right-0 grid grid-cols-1 mb-4 bg-secondary/90 text-primary-focus p-4 py-4 z-50">
-            {props.data === undefined ? null : (
-              <Modal />
-              // <button
-              //   className="btn text-secondary-content btn-success hover:bg-primary/40 mr-2 tooltip tooltip-bottom"
-              //   data-tip="This Store Isn't Real :("
-              // >
-              //   Checkout
-              // </button>
+            {props.data === undefined ? null : <Modal setUser={setUser} />}
+
+            {user === null ? null : (
+              <button
+                className="btn text-secondary-content btn-success hover:bg-primary/40 mr-2 tooltip"
+                onClick={() => checkOut(user)}
+              >
+                Checkout
+              </button>
             )}
 
             <button
