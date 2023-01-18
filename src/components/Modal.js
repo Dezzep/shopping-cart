@@ -88,8 +88,8 @@ export default function Modal(props) {
             setResponse(null);
           }, 3000);
         }
-        setSignUpPostalCode(signUpPostalCode.toUpperCase());
-        console.log(signUpPostalCode);
+        const Alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const Numbers = '0123456789';
         if (
           !(
             signUpPostalCode.charAt(0) === 'G' ||
@@ -107,6 +107,22 @@ export default function Modal(props) {
           resume = 0;
           setPostalCodeBackground(errorInputStyle);
           setResponse('PostalCode Must Be 6 Characters');
+          setTimeout(() => {
+            setResponse(null);
+          }, 3000);
+        } else if (
+          !(
+            Alphabet.includes(signUpPostalCode.charAt(0)) &&
+            Alphabet.includes(signUpPostalCode.charAt(1)) &&
+            Alphabet.includes(signUpPostalCode.charAt(2)) &&
+            Numbers.includes(signUpPostalCode.charAt(3)) &&
+            Numbers.includes(signUpPostalCode.charAt(4)) &&
+            Numbers.includes(signUpPostalCode.charAt(5))
+          )
+        ) {
+          resume = 0;
+          setPostalCodeBackground(errorInputStyle);
+          setResponse('PostalCode Must Be 3 Letters then 3Numbers');
           setTimeout(() => {
             setResponse(null);
           }, 3000);
@@ -156,6 +172,8 @@ export default function Modal(props) {
           signUpPassword,
           signUpCredit,
           signUpCvv,
+          signUpPostalCode,
+          signUpAddress,
         };
 
         const params = new URLSearchParams();
@@ -346,11 +364,11 @@ export default function Modal(props) {
                       <p className="label">Postal Code</p>
                       <input
                         maxLength="6"
-                        value={signUpPostalCode}
+                        value={signUpPostalCode.toUpperCase()}
                         type="text"
                         className={`input  input-sm ${postalCodeBackground}`}
                         onChange={(e) => {
-                          setSignUpPostalCode(e.target.value);
+                          setSignUpPostalCode(e.target.value.toUpperCase());
                           setPostalCodeBackground('');
                         }}
                       ></input>

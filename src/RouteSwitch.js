@@ -3,14 +3,14 @@ import { useState, useEffect } from 'react';
 import Home from './components/Home';
 import Shop from './components/Shop';
 import Navbar from './components/Navbar';
+import Checkout from './components/Checkout';
 
 const RouteSwitch = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [blurEffect, setBlurEffect] = useState(false);
   const [storeData, setStoreData] = useState('');
   const [inventory, setInventory] = useState({});
-  const [validateInitialCartState, setValidateInitialCartState] =
-    useState(false);
+
   const [totalCartItems, setTotalCartItems] = useState(
     // TOTAL QUANTITY OF ITEMS IN CART
     JSON.parse(localStorage.getItem('totalCartItems')) || 0
@@ -154,6 +154,22 @@ const RouteSwitch = () => {
                 <NavLink to="/">Go Back Home</NavLink>
               </p>
             </div>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <Checkout
+              errorMsg={errorMsg}
+              shopBlur={shopBlur}
+              blurToggleOff={blurToggleOff}
+              blurToggleOn={blurToggleOn}
+              cartIds={cartIds}
+              totalCartItems={totalCartItems}
+              fakeStoreData={fetchFakeStoreApi}
+              storeData={storeData}
+              inventory={inventory}
+            ></Checkout>
           }
         />
       </Routes>

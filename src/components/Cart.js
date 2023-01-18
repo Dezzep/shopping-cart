@@ -15,6 +15,7 @@ const Cart = (props) => {
       return 'OID_' + Date.now() + '_R_' + Math.floor(Math.random() * 100);
     };
     const orderId = createOrderId();
+
     // copy object and loop through the keys, increment the key by 1 (because index starts at 0)
     const cartIds = { ...props.cartIds };
     let cartIdsIncremented = {};
@@ -36,27 +37,33 @@ const Cart = (props) => {
       for (const key in data) {
         params.append(key, data[key]);
       }
-
-      try {
-        fetch('http://localhost:3000/api/checkout', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: params,
-        });
-      } catch (err) {
-        x = 0;
-        console.log(err);
-      }
+      navigate('/checkout', {
+        state: {
+          email,
+          orderId,
+          cartIds: { ...props.cartIds },
+        },
+      });
+      // try {
+      //   fetch('http://localhost:3000/api/checkout', {
+      //     method: 'POST',
+      //     headers: {
+      //       'Content-Type': 'application/x-www-form-urlencoded',
+      //     },
+      //     body: params,
+      //   });
+      // } catch (err) {
+      //   x = 0;
+      //   console.log(err);
+      // }
     }
-    if (x === 1) {
-      localStorage.clear();
-      // refresh page
+    // if (x === 1) {
+    //   localStorage.clear();
+    //   // refresh page
 
-      navigate('/order');
-      window.location.reload(false);
-    }
+    //   navigate('/order');
+    //   window.location.reload(false);
+    // }
   };
 
   useEffect(() => {
