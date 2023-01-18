@@ -23,6 +23,7 @@ const RouteSwitch = () => {
         const request = await fetch('http://localhost:3000/api/data/');
         const data = await request.json();
         setStoreData(data);
+        console.log(data[0]);
       } catch (err) {
         setErrorMsg('Failed To Connect To The Store Server.');
       }
@@ -118,7 +119,6 @@ const RouteSwitch = () => {
         <Route
           path="/order"
           element={
-            
             <div className="flex flex-col items-center justify-center h-screen">
               <h1 className="text-4xl font-bold text-gray-800">
                 Order Page Coming Soon

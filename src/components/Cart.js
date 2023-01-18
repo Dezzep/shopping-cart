@@ -106,8 +106,8 @@ const Cart = (props) => {
             title={props.data[key].TITLE}
             image={props.data[key].IMAGE}
             price={props.data[key].PRICE.toFixed(2)}
-            qty={props.cartIds[key]}
-            id={props.data[key].ID - 1}
+            qty={props.cartIds[key]}  // quantity   
+            id={props.data[key].P_ID - 1}
           ></CartCards>
         );
       }

@@ -73,6 +73,7 @@ const Shop = (props) => {
   };
 
   const arrayOfCards = [];
+
   for (const i in props.storeData) {
     if (
       props.storeData[i].CATEGORY === 'mens clothing' ||
@@ -83,7 +84,7 @@ const Shop = (props) => {
           title={props.storeData[i].TITLE}
           key={`${props.storeData[i].TITLE}_${props.storeData}`}
           image={props.storeData[i].IMAGE}
-          idKey={props.storeData[i].ID}
+          idKey={props.storeData[i].P_ID}
           price={props.storeData[i].PRICE.toFixed(2)} // To fixed makes sure all prices look like ex: 12.3 = 12.30
           addToCart={props.addItem}
         />

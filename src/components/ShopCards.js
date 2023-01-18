@@ -14,6 +14,7 @@ const ShopCards = (props) => {
 
         <div className="card-actions justify-end">
           <p>{props.price}$</p>
+
           <button
             onClick={() => props.addToCart(props.idKey - 1)}
             className="btn btn-primary ease-in duration-250"

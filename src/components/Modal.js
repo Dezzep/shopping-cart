@@ -14,6 +14,8 @@ export default function Modal(props) {
   const [signUpPasswordVerify, setSignUpPasswordVerify] = useState('');
   const [signUpCredit, setSignUpCredit] = useState('');
   const [signUpCvv, setSignUpCvv] = useState('');
+  const [signUpAddress, setSignUpAddress] = useState('');
+  const [signUpPostalCode, setSignUpPostalCode] = useState('');
   const [responseFromServer, setResponse] = useState(null);
   const [emailBackground, setEmailBackground] = useState('');
   const [passwordBackground, setPasswordBackground] = useState('');
@@ -25,6 +27,8 @@ export default function Modal(props) {
   const [cvvBackground, setCvvBackground] = useState('');
   const [loginPasswordBackground, setLoginPasswordBackground] = useState('');
   const [loggedInEmail, setLoggedInEmail] = useState('');
+  const [addressBackground, setAddressBackground] = useState('');
+  const [postalCodeBackground, setPostalCodeBackground] = useState('');
   const errorInputStyle = 'input-bordered border-red-600 bg-red-200';
   const emailRegex =
     /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
@@ -70,8 +74,46 @@ export default function Modal(props) {
             ? setCvvBackground(errorInputStyle)
             : setCvvBackground('');
 
+          checkValue === signUpAddress
+            ? setAddressBackground(errorInputStyle)
+            : setAddressBackground('');
+
+          checkValue === signUpPostalCode
+            ? setPostalCodeBackground(errorInputStyle)
+            : setPostalCodeBackground('');
+
           setResponse('Please fill out required fields');
 
+          setTimeout(() => {
+            setResponse(null);
+          }, 3000);
+        }
+        setSignUpPostalCode(signUpPostalCode.toUpperCase());
+        console.log(signUpPostalCode);
+        if (
+          !(
+            signUpPostalCode.charAt(0) === 'G' ||
+            signUpPostalCode.charAt(0) === 'H' ||
+            signUpPostalCode.charAt(0) === 'J'
+          )
+        ) {
+          resume = 0;
+          setPostalCodeBackground(errorInputStyle);
+          setResponse('PostalCode Must Start With: G, H, or J');
+          setTimeout(() => {
+            setResponse(null);
+          }, 3000);
+        } else if (signUpPostalCode.length !== 6) {
+          resume = 0;
+          setPostalCodeBackground(errorInputStyle);
+          setResponse('PostalCode Must Be 6 Characters');
+          setTimeout(() => {
+            setResponse(null);
+          }, 3000);
+        } else if (signUpPostalCode.includes(0)) {
+          resume = 0;
+          setPostalCodeBackground(errorInputStyle);
+          setResponse('Your postal code can not contain 0');
           setTimeout(() => {
             setResponse(null);
           }, 3000);
@@ -84,6 +126,9 @@ export default function Modal(props) {
       setError(signUpPasswordVerify);
       setError(signUpPassword);
       setError(signUpCvv);
+      setError(signUpAddress);
+      setError(signUpPostalCode);
+
       if (signUpPassword !== signUpPasswordVerify) {
         setPasswordBackground(errorInputStyle);
         setConfirmPasswordBackground(errorInputStyle);
@@ -287,6 +332,26 @@ export default function Modal(props) {
                           setSignUpPasswordVerify(e.target.value);
                           setConfirmPasswordBackground('');
                           setPasswordBackground('');
+                        }}
+                      ></input>
+                      <p className="label">Address</p>
+                      <input
+                        value={signUpAddress}
+                        className={`input  input-sm ${addressBackground}`}
+                        onChange={(e) => {
+                          setSignUpAddress(e.target.value);
+                          setAddressBackground('');
+                        }}
+                      ></input>
+                      <p className="label">Postal Code</p>
+                      <input
+                        maxLength="6"
+                        value={signUpPostalCode}
+                        type="text"
+                        className={`input  input-sm ${postalCodeBackground}`}
+                        onChange={(e) => {
+                          setSignUpPostalCode(e.target.value);
+                          setPostalCodeBackground('');
                         }}
                       ></input>
                       <p className="label">Credit Card</p>
