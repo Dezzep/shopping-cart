@@ -8,6 +8,9 @@ const RouteSwitch = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [blurEffect, setBlurEffect] = useState(false);
   const [storeData, setStoreData] = useState('');
+  const [inventory, setInventory] = useState({});
+  const [validateInitialCartState, setValidateInitialCartState] =
+    useState(false);
   const [totalCartItems, setTotalCartItems] = useState(
     // TOTAL QUANTITY OF ITEMS IN CART
     JSON.parse(localStorage.getItem('totalCartItems')) || 0
@@ -16,6 +19,7 @@ const RouteSwitch = () => {
     //Cart Id Example 2: 5 (2 is the id of the item, 5 is the quantity)
     JSON.parse(localStorage.getItem('cartIds')) || {}
   );
+  localStorage.clear();
 
   const fetchFakeStoreApi = async () => {
     if (!storeData) {
@@ -23,7 +27,15 @@ const RouteSwitch = () => {
         const request = await fetch('http://localhost:3000/api/data/');
         const data = await request.json();
         setStoreData(data);
-        console.log(data[0]);
+
+        // create an object with the inventory of each item
+        if (Object.keys(inventory).length === 0 && data.length > 0) {
+          data.forEach((item) => {
+            setInventory((prev) => {
+              return { ...prev, [item.P_ID]: item.QTY_NET };
+            });
+          });
+        }
       } catch (err) {
         setErrorMsg('Failed To Connect To The Store Server.');
       }
@@ -46,12 +58,25 @@ const RouteSwitch = () => {
   };
 
   const addItem = (id) => {
-    setTotalCartItems(totalCartItems + 1);
-    createArrayOfIdsForShoppingCart(id);
-    localStorage.setItem('totalCartItems', JSON.stringify(totalCartItems));
+    // check if the item is out of stock using cartIds
+    if (inventory[id + 1] !== 0) {
+      createArrayOfIdsForShoppingCart(id);
+
+      setInventory((prev) => {
+        return { ...prev, [id + 1]: prev[id + 1] - 1 };
+      });
+
+      setTotalCartItems(totalCartItems + 1);
+
+      localStorage.setItem('totalCartItems', JSON.stringify(totalCartItems));
+    }
   };
   const deleteItem = (id) => {
     setTotalCartItems(totalCartItems - 1);
+    setInventory((prev) => {
+      return { ...prev, [id + 1]: prev[id + 1] + 1 };
+    });
+
     removeFromArrayOfIdsForShoppingCart(id);
     localStorage.setItem('totalCartItems', JSON.stringify(totalCartItems));
   };
@@ -91,6 +116,7 @@ const RouteSwitch = () => {
               cartIds={cartIds}
               fakeStoreData={fetchFakeStoreApi}
               storeData={storeData}
+              inventory={inventory}
             >
               {' '}
               <Navbar></Navbar>
@@ -111,6 +137,7 @@ const RouteSwitch = () => {
               totalCartItems={totalCartItems}
               fakeStoreData={fetchFakeStoreApi}
               storeData={storeData}
+              inventory={inventory}
             >
               <Navbar> </Navbar>{' '}
             </Shop>

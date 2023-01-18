@@ -87,6 +87,7 @@ const Shop = (props) => {
           idKey={props.storeData[i].P_ID}
           price={props.storeData[i].PRICE.toFixed(2)} // To fixed makes sure all prices look like ex: 12.3 = 12.30
           addToCart={props.addItem}
+          inventory={props.inventory}
         />
       );
     }
@@ -102,6 +103,7 @@ const Shop = (props) => {
         addItem={props.addItem}
         cartIds={props.cartIds}
         data={props.storeData}
+        inventory={props.inventory}
       />
       {props.shopBlur()}
       <h1 className="text-2xl text-center mb-12 z-10">Shop</h1>

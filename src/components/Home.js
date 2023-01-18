@@ -20,6 +20,7 @@ const Home = (props) => {
         cartIds={props.cartIds}
         data={props.storeData}
         addItem={props.addItem}
+        inventory={props.inventory}
       />
       {props.shopBlur()}
       <div

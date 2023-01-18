@@ -13,14 +13,25 @@ const CartCards = (props) => {
         <p className="select-none">Price: {props.price}$</p>
 
         <div className=" card-actions align-center">
-          <button
-            onClick={(e) => {
-              props.addItem(props.id);
-            }}
-            className="btn btn-sm md:btn-md rounded-2xl bg-secondary"
-          >
-            +
-          </button>
+          {props.inventory[props.id + 1] === 0 ? (
+            <button
+              onClick={(e) => {
+                props.addItem(props.id);
+              }}
+              className="btn btn-sm md:btn-md rounded-2xl bg-grey-400"
+            >
+              +
+            </button>
+          ) : (
+            <button
+              onClick={(e) => {
+                props.addItem(props.id);
+              }}
+              className="btn btn-sm md:btn-md rounded-2xl bg-secondary"
+            >
+              +
+            </button>
+          )}
           <p className="py-1 md:py-2 text-center select-none">{props.qty}</p>
           <button
             className="btn btn-sm md:btn-md rounded-2xl bg-secondary"

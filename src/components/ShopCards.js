@@ -15,12 +15,25 @@ const ShopCards = (props) => {
         <div className="card-actions justify-end">
           <p>{props.price}$</p>
 
-          <button
-            onClick={() => props.addToCart(props.idKey - 1)}
-            className="btn btn-primary ease-in duration-250"
-          >
-            Add To Cart
-          </button>
+          {props.inventory[props.idKey] === 0 ? (
+            <button
+              onClick={() => {
+                props.addToCart(props.idKey - 1);
+              }}
+              className="btn btn-grey-400 ease-in duration-250"
+            >
+              Out Of Stock
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                props.addToCart(props.idKey - 1);
+              }}
+              className="btn btn-primary ease-in duration-250"
+            >
+              Add To Cart
+            </button>
+          )}
         </div>
       </div>
     </div>
