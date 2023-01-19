@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CartCards from './CartCards';
+import getUserData from '../requests/getUserData';
 import Modal from './Modal';
 
 const Cart = (props) => {
@@ -9,12 +10,27 @@ const Cart = (props) => {
   const [user, setUser] = useState(null);
 
   const [rerender, setRerender] = useState(props.rendering);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [postCode, setPostCode] = useState('');
+  const [address, setAddress] = useState('');
 
-  const checkOut = (email) => {
+  const fetchData = async (em) => {
+    const data = await getUserData(em);
+    console.log(data[0].FIRST_NAME);
+    setFirstName(data[0].FIRST_NAME);
+    setLastName(data[0].LAST_NAME);
+    setPostCode(data[0].POSTCODE);
+    setAddress(data[0].ADDRESS);
+    return data[0].POSTCODE;
+  };
+  const checkOut = async (email) => {
     const createOrderId = () => {
       return 'OID_' + Date.now() + '_R_' + Math.floor(Math.random() * 100);
     };
     const orderId = createOrderId();
+
+    const post = await fetchData(email);
 
     // copy object and loop through the keys, increment the key by 1 (because index starts at 0)
     const cartIds = { ...props.cartIds };
@@ -27,43 +43,42 @@ const Cart = (props) => {
     }
     let x = 1;
     for (const key in cartIdsIncremented) {
+      await post;
       const data = {
-        o_id: orderId,
-        email,
-        item_id: key,
-        quantity: cartIdsIncremented[key],
+        po_id: orderId,
+        p_email_address: email,
+        p_postcode: post,
+        p_product_id: key,
+        p_qty: cartIdsIncremented[key],
       };
       const params = new URLSearchParams();
       for (const key in data) {
         params.append(key, data[key]);
       }
-      navigate('/checkout', {
-        state: {
-          email,
-          orderId,
-          cartIds: { ...props.cartIds },
-        },
-      });
-      // try {
-      //   fetch('http://localhost:3000/api/checkout', {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/x-www-form-urlencoded',
-      //     },
-      //     body: params,
-      //   });
-      // } catch (err) {
-      //   x = 0;
-      //   console.log(err);
-      // }
-    }
-    // if (x === 1) {
-    //   localStorage.clear();
-    //   // refresh page
 
-    //   navigate('/order');
-    //   window.location.reload(false);
-    // }
+      try {
+        fetch('http://localhost:3000/api/checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: params,
+        });
+      } catch (err) {
+        x = 0;
+        console.log(err);
+      }
+    }
+
+    if (x === 1) {
+      console.log('Success');
+
+      // localStorage.clear();
+      // // refresh page
+
+      // navigate('/order');
+      // window.location.reload(false);
+    }
   };
 
   useEffect(() => {

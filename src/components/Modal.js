@@ -248,7 +248,10 @@ export default function Modal(props) {
 
   if (accountValid) {
     return (
-      <div className="text-bold">You are signed in as {loggedInEmail}</div>
+      <div className="text-bold bg-red-500/40 mx-auto pb-2 text-blue-100">
+        You are signed in with the email {loggedInEmail} <br />
+        Hit the checkout button to order now!
+      </div>
     );
   }
 
