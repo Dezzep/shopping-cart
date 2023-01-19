@@ -113,16 +113,16 @@ export default function Modal(props) {
         } else if (
           !(
             Alphabet.includes(signUpPostalCode.charAt(0)) &&
-            Alphabet.includes(signUpPostalCode.charAt(1)) &&
+            Numbers.includes(signUpPostalCode.charAt(1)) &&
             Alphabet.includes(signUpPostalCode.charAt(2)) &&
             Numbers.includes(signUpPostalCode.charAt(3)) &&
-            Numbers.includes(signUpPostalCode.charAt(4)) &&
+            Alphabet.includes(signUpPostalCode.charAt(4)) &&
             Numbers.includes(signUpPostalCode.charAt(5))
           )
         ) {
           resume = 0;
           setPostalCodeBackground(errorInputStyle);
-          setResponse('PostalCode Must Be 3 Letters then 3Numbers');
+          setResponse('PostalCode should be ex: A1A1A1');
           setTimeout(() => {
             setResponse(null);
           }, 3000);

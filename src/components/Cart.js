@@ -21,19 +21,10 @@ const Cart = (props) => {
   const [user, setUser] = useState(null);
 
   const [rerender, setRerender] = useState(props.rendering);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [postCode, setPostCode] = useState('');
-  const [address, setAddress] = useState('');
-  const [idOfOrder, setIdOfOrder] = useState('');
 
   const fetchData = async (em) => {
     const data = await getUserData(em);
-    console.log(data[0].FIRST_NAME);
-    setFirstName(data[0].FIRST_NAME);
-    setLastName(data[0].LAST_NAME);
-    setPostCode(data[0].POSTCODE);
-    setAddress(data[0].ADDRESS);
+
     return data[0].POSTCODE;
   };
   const checkOut = async (email) => {
@@ -41,7 +32,6 @@ const Cart = (props) => {
       return 'OID_' + Date.now() + '_R_' + Math.floor(Math.random() * 100);
     };
     const orderId = createOrderId();
-    setIdOfOrder(orderId);
 
     const post = await fetchData(email);
 
@@ -93,15 +83,13 @@ const Cart = (props) => {
       }
 
       if (x === 0) {
-        alert('There was an error with your order, please try again.');
+        console.log('check');
       } else {
-        alert(
-          'Your order has been placed. it will arrive in: ' + estimatedDays
-        );
         navigate('/order', {
           state: {
             orderId: orderId,
             estimatedDays: estimatedDays,
+            email: email,
           },
         });
         // refresh page
