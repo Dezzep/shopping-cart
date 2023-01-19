@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Home from './components/Home';
 import Shop from './components/Shop';
 import Navbar from './components/Navbar';
+import OrderConfirmation from './components/OrderConfirmation';
 
 const RouteSwitch = () => {
   const [errorMsg, setErrorMsg] = useState('');
@@ -142,19 +143,7 @@ const RouteSwitch = () => {
             </Shop>
           }
         />
-        <Route
-          path="/order"
-          element={
-            <div className="flex flex-col items-center justify-center h-screen">
-              <h1 className="text-4xl font-bold text-gray-800">
-                Order Page Coming Soon
-              </h1>
-              <p className="text-2xl font-bold text-gray-800">
-                <NavLink to="/">Go Back Home</NavLink>
-              </p>
-            </div>
-          }
-        />
+        <Route path="/order" element={<OrderConfirmation />} />
       </Routes>
     </BrowserRouter>
   );

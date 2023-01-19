@@ -2,8 +2,19 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CartCards from './CartCards';
 import getUserData from '../requests/getUserData';
+import getOrderTime from '../requests/getOrderTime';
 import Modal from './Modal';
 
+const getEstimatedDays = async (o_id) => {
+  const data = await getOrderTime(o_id);
+  let numberOfDays = 0;
+  Object.keys(data).forEach((key) => {
+    if (numberOfDays === 0) {
+      numberOfDays = data[key];
+    }
+  });
+  return numberOfDays;
+};
 const Cart = (props) => {
   const navigate = useNavigate();
 
@@ -14,6 +25,7 @@ const Cart = (props) => {
   const [lastName, setLastName] = useState('');
   const [postCode, setPostCode] = useState('');
   const [address, setAddress] = useState('');
+  const [idOfOrder, setIdOfOrder] = useState('');
 
   const fetchData = async (em) => {
     const data = await getUserData(em);
@@ -29,6 +41,7 @@ const Cart = (props) => {
       return 'OID_' + Date.now() + '_R_' + Math.floor(Math.random() * 100);
     };
     const orderId = createOrderId();
+    setIdOfOrder(orderId);
 
     const post = await fetchData(email);
 
@@ -41,11 +54,12 @@ const Cart = (props) => {
       delete obj[key];
       cartIdsIncremented = { ...cartIdsIncremented, ...obj };
     }
+    let estimatedDays = false;
     let x = 1;
     for (const key in cartIdsIncremented) {
       await post;
       const data = {
-        po_id: orderId,
+        p_po_id: orderId,
         p_email_address: email,
         p_postcode: post,
         p_product_id: key,
@@ -57,27 +71,42 @@ const Cart = (props) => {
       }
 
       try {
-        fetch('http://localhost:3000/api/checkout', {
+        const response = await fetch('http://localhost:3000/api/checkout', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
           body: params,
         });
-      } catch (err) {
+        if (!response.ok) {
+          x = 0;
+          throw new Error(response.statusText);
+        }
+
+        estimatedDays = await getEstimatedDays(orderId);
+        console.log(estimatedDays);
+
+        // do something with the data
+      } catch (error) {
         x = 0;
-        console.log(err);
+        console.error(error);
       }
-    }
 
-    if (x === 1) {
-      console.log('Success');
-
-      // localStorage.clear();
-      // // refresh page
-
-      // navigate('/order');
-      // window.location.reload(false);
+      if (x === 0) {
+        alert('There was an error with your order, please try again.');
+      } else {
+        alert(
+          'Your order has been placed. it will arrive in: ' + estimatedDays
+        );
+        navigate('/order', {
+          state: {
+            orderId: orderId,
+            estimatedDays: estimatedDays,
+          },
+        });
+        // refresh page
+        window.location.reload();
+      }
     }
   };
 
